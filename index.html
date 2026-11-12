@@ -1,464 +1,1085 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Кроссворд: Безопасность России начинается с нас</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes" />
+<meta name="theme-color" content="#0b1020" />
+<meta name="format-detection" content="telephone=no" />
+<title>Тест: Противодействие вербовке</title>
 <style>
-  *{box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;}
-  body{background:linear-gradient(145deg,#1b3b5c,#2a5f7a);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:12px;margin:0;}
-  .container{background:#fff;border-radius:24px;padding:18px;box-shadow:0 20px 40px rgba(0,0,0,.45);max-width:1150px;width:100%;}
-  h1{text-align:center;margin:0 0 4px;font-size:1.4rem;color:#0e2a3b;line-height:1.2;}
-  .subhead{text-align:center;color:#2d5f7a;font-style:italic;margin-bottom:16px;border-bottom:2px dashed #9bb7c7;padding-bottom:8px;font-size:.85rem;}
-  
-  .game-area{display:flex;gap:24px;justify-content:center;align-items:flex-start;}
-  .grid-wrapper{background:#e3eef6;padding:8px;border-radius:14px;box-shadow:inset 0 0 0 2px #fff,0 6px 14px -6px #1f3f55;display:flex;justify-content:flex-start;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;}
-  
-  .crossword-grid{display:grid;gap:1px;background:#8fb0c6;padding:2px;border-radius:4px;flex-shrink:0;}
-  .cell{width:30px;height:30px;background:#fff;border-radius:2px;position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .cell.black{background:#132c3d;border-radius:2px;}
-  .cell input{width:100%;height:100%;border:none;background:transparent;text-align:center;font-size:1rem;font-weight:700;color:#0d2c3f;text-transform:uppercase;outline:none;padding:0;font-family:inherit;}
-  .cell input:focus{background:#fff3cf;box-shadow:inset 0 0 0 2px #f0b429;border-radius:2px;}
-  .number-badge{position:absolute;top:0px;left:1px;font-size:.55rem;font-weight:700;color:#2b6a8a;pointer-events:none;line-height:1;}
-  
-  .clues{display:flex;flex-direction:column;gap:12px;min-width:260px;max-width:360px;}
-  .clue-section{background:#f1f6fa;border-radius:12px;padding:10px 14px;border-left:4px solid #2d7a9e;}
-  .clue-section h3{margin:0 0 8px;color:#174257;font-size:.95rem;}
-  .clue-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px;}
-  .clue-list li{font-size:.8rem;color:#1e3b4b;display:flex;gap:6px;line-height:1.3;}
-  .clue-num{font-weight:800;color:#0c4e6b;min-width:18px;flex-shrink:0;}
-  
-  .buttons{display:flex;gap:10px;margin-top:18px;justify-content:center;flex-wrap:wrap;}
-  .btn{border:none;border-radius:50px;padding:12px 24px;font-size:.95rem;font-weight:700;cursor:pointer;transition:.15s;background:#fff;color:#1a4b63;box-shadow:0 5px 0 #0b2a3a;border:1px solid #b8d0df;min-height:48px;min-width:120px;touch-action:manipulation;}
-  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #0b2a3a;}
-  .btn.check{background:#f0b429;box-shadow:0 5px 0 #8a6408;}
-  .btn.reset{background:#c9d6df;box-shadow:0 5px 0 #4b6272;}
-  .message-box{margin-top:12px;text-align:center;font-weight:600;font-size:.95rem;min-height:32px;padding:6px 12px;border-radius:30px;background:#e1ecf3;color:#0f3d52;}
-  .message-box.success{background:#b9e6b9;color:#1d5e1d;}
-  .message-box.error{background:#f7c6c6;color:#9e2b2b;}
-  
-  @media(max-width:900px){
-    .game-area{flex-direction:column;align-items:center;gap:16px;}
-    .clues{max-width:100%;width:100%;min-width:0;}
+  /* ================= БАЗА (mobile-first) ================= */
+  :root{
+    --bg:#0b1020;
+    --bg2:#121a33;
+    --card:#161f3d;
+    --card2:#1d2850;
+    --text:#f0f4ff;
+    --muted:#bcc7e6;
+    --accent:#5b93ff;
+    --accent2:#8b6cff;
+    --good:#3ad885;
+    --bad:#ff6b86;
+    --warn:#ffc24d;
+    --tap:56px;
+    --safe-top:env(safe-area-inset-top, 0px);
+    --safe-bottom:env(safe-area-inset-bottom, 0px);
+    --safe-left:env(safe-area-inset-left, 0px);
+    --safe-right:env(safe-area-inset-right, 0px);
   }
-  @media(max-width:600px){
-    .container{padding:12px;border-radius:18px;}
-    .cell{width:24px;height:24px;}
-    .cell input{font-size:.85rem;}
-    .number-badge{font-size:.45rem;}
-    h1{font-size:1.1rem;}
-    .subhead{font-size:.75rem;}
-    .clue-list li{font-size:.75rem;}
-    .btn{padding:10px 20px;font-size:.9rem;min-width:100px;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,Roboto,Arial,sans-serif;
+    font-size:18px;
+    line-height:1.6;
+    color:var(--text);
+    /* только радиальные «пятна» — без повторяющегося линейного градиента */
+    background:
+      radial-gradient(600px 500px at 0% 0%, #1b2a5a 0%, transparent 70%),
+      radial-gradient(500px 400px at 100% 0%, #2a1b5a 0%, transparent 70%),
+      var(--bg);
+    background-attachment: fixed;
+    min-height:100vh;
+    min-height:100dvh;
   }
-  @media(max-width:380px){
-    .cell{width:21px;height:21px;}
-    .cell input{font-size:.75rem;}
-    .number-badge{font-size:.4rem;}
+
+  /* приложение = на весь экран на телефоне, без градиентного слоя */
+  .app{
+    width:100%;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    background:transparent;
+  }
+
+  /* ---------- Топбар: сплошной фон ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    padding:calc(10px + var(--safe-top)) 16px 10px;
+    background:rgba(11,16,32,.92);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .topbar-row{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;min-width:0;
+  }
+  .logo{
+    width:40px;height:40px;flex:0 0 40px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-size:22px;
+    box-shadow:0 6px 16px rgba(91,147,255,.45);
+  }
+  .brand-title{
+    font-size:16px;font-weight:800;letter-spacing:-.01em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .q-counter{
+    flex:0 0 auto;
+    font-size:15px;font-weight:700;color:var(--muted);
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    padding:8px 14px;border-radius:999px;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .q-counter b{color:var(--text);font-size:16px}
+  .progress-track{
+    height:10px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;width:0%;border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width .4s cubic-bezier(.2,.8,.2,1);
+    box-shadow:0 0 14px rgba(91,147,255,.6);
+  }
+
+  /* ---------- Контент ---------- */
+  .content{
+    flex:1;
+    padding:20px 16px calc(120px + var(--safe-bottom));
+    width:100%;
+    max-width:720px;
+    margin:0 auto;
+  }
+  .screen{display:none}
+  .screen.active{display:block;animation:in .35s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- Типографика ---------- */
+  h1{
+    font-size:26px;line-height:1.25;font-weight:800;
+    letter-spacing:-.02em;margin:8px 0 14px;
+  }
+  h2{
+    font-size:22px;line-height:1.4;font-weight:800;
+    letter-spacing:-.01em;margin:0 0 20px;
+  }
+  p.lead{
+    font-size:17px;line-height:1.65;color:var(--muted);
+    margin:0 0 20px;
+  }
+
+  /* ---------- Стартовый экран ---------- */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:14px;font-weight:700;color:#d5e1ff;
+    background:rgba(91,147,255,.16);
+    border:1px solid rgba(91,147,255,.4);
+    padding:8px 14px;border-radius:999px;margin-bottom:14px;
+  }
+  .features{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+  .feature{
+    display:flex;gap:14px;align-items:flex-start;
+    background:var(--card);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:16px;padding:16px;
+  }
+  .feature .ic{font-size:26px;flex:0 0 auto;line-height:1}
+  .feature h4{font-size:17px;margin:0 0 4px;font-weight:800}
+  .feature p{font-size:15px;line-height:1.55;color:var(--muted);margin:0}
+  .notice{
+    display:flex;gap:12px;align-items:flex-start;
+    background:rgba(255,194,77,.1);
+    border:1px solid rgba(255,194,77,.35);
+    border-radius:14px;padding:14px 16px;
+    font-size:15px;line-height:1.55;color:#ffe0a3;
+    margin-bottom:20px;
+  }
+  .notice b{color:#fff}
+
+  /* ---------- Кнопки ---------- */
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:var(--tap);
+    padding:16px 24px;
+    border-radius:16px;
+    font-size:18px;font-weight:800;letter-spacing:-.01em;
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 10px 24px rgba(91,147,255,.4);
+    transition:transform .12s ease,opacity .2s;
+    touch-action:manipulation;
+    width:100%;
+  }
+  .btn:active{transform:scale(.98)}
+  .btn[disabled]{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn.ghost{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);
+    box-shadow:none;color:var(--text);
+  }
+
+  /* ---------- Вопросы ---------- */
+  .q-meta{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:10px;flex-wrap:wrap;
+  }
+  .q-topic{
+    font-size:14px;font-weight:700;color:#c9d8ff;
+    background:rgba(91,147,255,.16);
+    border:1px solid rgba(91,147,255,.4);
+    padding:6px 12px;border-radius:999px;
+  }
+  .q-type{
+    font-size:13px;font-weight:700;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.5px;
+  }
+  .q-text{
+    font-size:22px;line-height:1.42;font-weight:800;
+    letter-spacing:-.01em;margin:0 0 20px;
+  }
+
+  /* ---------- Варианты ответов ---------- */
+  .options{display:flex;flex-direction:column;gap:12px}
+  .opt{
+    display:flex;gap:14px;align-items:flex-start;
+    min-height:64px;
+    padding:16px 18px;
+    border-radius:16px;
+    border:2px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.05);
+    cursor:pointer;
+    transition:border-color .15s,background .15s,transform .1s;
+    user-select:none;touch-action:manipulation;
+  }
+  .opt:active{transform:scale(.99)}
+  .opt .mark{
+    flex:0 0 32px;height:32px;border-radius:10px;
+    border:2.5px solid rgba(255,255,255,.4);
+    display:grid;place-items:center;
+    font-size:16px;font-weight:800;color:#fff;
+    transition:.15s;
+  }
+  .opt .txt{
+    font-size:18px;line-height:1.5;font-weight:500;
+    padding-top:2px;
+  }
+  .opt.sel{border-color:var(--accent);background:rgba(91,147,255,.2)}
+  .opt.sel .mark{background:var(--accent);border-color:var(--accent)}
+  .opt.correct{border-color:var(--good);background:rgba(58,216,133,.16)}
+  .opt.correct .mark{background:var(--good);border-color:var(--good)}
+  .opt.wrong{border-color:var(--bad);background:rgba(255,107,134,.14)}
+  .opt.wrong .mark{background:var(--bad);border-color:var(--bad)}
+  .opt[data-disabled="1"]{cursor:default}
+
+  /* ---------- MATCH ---------- */
+  .match-section{margin-bottom:18px}
+  .match-section-title{
+    font-size:15px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.7px;color:var(--muted);margin-bottom:10px;
+  }
+  .chip-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+  .chip{
+    min-height:60px;
+    padding:16px 18px;
+    border-radius:14px;
+    border:2px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.05);
+    font-size:17px;line-height:1.5;
+    cursor:pointer;
+    display:flex;align-items:center;
+    transition:.15s;
+  }
+  .chip:active{transform:scale(.99)}
+  .chip.picked{
+    border-color:var(--accent);
+    background:rgba(91,147,255,.22);
+    box-shadow:0 0 0 3px rgba(91,147,255,.25);
+  }
+  .chip.used{opacity:.35;pointer-events:none}
+  .slot-list{display:flex;flex-direction:column;gap:12px}
+  .slot{
+    min-height:70px;
+    padding:14px 16px;
+    border-radius:14px;
+    border:2px dashed rgba(255,255,255,.28);
+    background:rgba(255,255,255,.03);
+    display:flex;flex-direction:column;gap:8px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .slot-label{
+    font-size:15px;font-weight:800;color:var(--text);line-height:1.4;
+  }
+  .slot-hint{
+    font-size:14px;color:var(--muted);line-height:1.4;
+  }
+  .slot-value{
+    display:inline-flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:10px 12px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-size:16px;font-weight:600;line-height:1.4;
+    word-break:break-word;
+  }
+  .slot-value span{flex:1;min-width:0}
+  .slot-value button{
+    flex:0 0 32px;width:32px;height:32px;border-radius:50%;
+    border:none;background:rgba(0,0,0,.28);color:#fff;
+    font-size:15px;font-weight:800;cursor:pointer;
+    display:grid;place-items:center;
+  }
+  .slot.filled{border-style:solid;border-color:var(--accent)}
+  .slot.ok{border-color:var(--good);background:rgba(58,216,133,.12)}
+  .slot.bad{border-color:var(--bad);background:rgba(255,107,134,.1)}
+
+  /* ---------- ORDER ---------- */
+  .sortable{display:flex;flex-direction:column;gap:12px}
+  .sort-item{
+    display:flex;align-items:center;gap:12px;
+    min-height:72px;
+    padding:14px 16px;
+    border-radius:14px;
+    border:2px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.05);
+    font-size:17px;line-height:1.5;
+  }
+  .sort-idx{
+    flex:0 0 36px;height:36px;border-radius:10px;
+    background:rgba(255,255,255,.12);
+    display:grid;place-items:center;
+    font-size:17px;font-weight:800;color:var(--text);
+  }
+  .sort-text{flex:1;min-width:0}
+  .sort-moves{display:flex;flex-direction:column;gap:6px;flex:0 0 auto}
+  .sort-moves button{
+    width:44px;height:44px;
+    border-radius:11px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.1);
+    color:var(--text);
+    font-size:20px;font-weight:800;
+    display:grid;place-items:center;
+    cursor:pointer;touch-action:manipulation;
+  }
+  .sort-moves button:active{transform:scale(.94)}
+  .sort-moves button[disabled]{opacity:.3;cursor:not-allowed}
+
+  /* ---------- Фидбек ---------- */
+  .feedback{
+    margin-top:18px;padding:18px;border-radius:16px;
+    display:none;font-size:16px;line-height:1.6;
+  }
+  .feedback.show{display:block;animation:in .3s ease both}
+  .feedback.ok{border:2px solid rgba(58,216,133,.55);background:rgba(58,216,133,.14)}
+  .feedback.no{border:2px solid rgba(255,107,134,.55);background:rgba(255,107,134,.12)}
+  .feedback h5{font-size:18px;margin:0 0 8px;font-weight:800}
+  .feedback p{margin:0;color:var(--muted);font-size:16px;line-height:1.6}
+
+  /* ---------- Нижняя панель действий ---------- */
+  .action-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:30;
+    padding:12px 16px calc(12px + var(--safe-bottom));
+    background:rgba(11,16,32,.96);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid rgba(255,255,255,.1);
+    display:flex;flex-direction:column;gap:8px;
+    max-width:720px;margin:0 auto;
+  }
+  .action-bar .btn{width:100%}
+
+  /* ---------- Результат ---------- */
+  .result-hero{
+    display:flex;flex-direction:column;align-items:center;gap:16px;
+    margin-bottom:22px;text-align:center;
+  }
+  .ring{
+    position:relative;width:200px;height:200px;
+  }
+  .ring svg{width:200px;height:200px;transform:rotate(-90deg)}
+  .ring-val{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-size:44px;font-weight:900;letter-spacing:-.02em;
+  }
+  .ring-val small{
+    display:block;font-size:13px;font-weight:700;color:var(--muted);
+    letter-spacing:.8px;margin-top:2px;
+  }
+  .levels{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+  .level{
+    padding:14px 16px;border-radius:14px;
+    border:1px solid rgba(255,255,255,.12);
+    font-size:15px;line-height:1.55;color:var(--muted);
+  }
+  .level.active{
+    border-color:var(--accent);
+    background:rgba(91,147,255,.16);
+    color:var(--text);font-weight:700;
+    border-width:2px;
+  }
+  .review{display:flex;flex-direction:column;gap:10px}
+  .rev-item{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:14px 16px;border-radius:14px;
+    border:1px solid rgba(255,255,255,.1);
+    font-size:15px;line-height:1.55;
+  }
+  .rev-ic{
+    flex:0 0 28px;height:28px;border-radius:8px;
+    display:grid;place-items:center;font-size:15px;font-weight:800;
+  }
+  .rev-item.ok .rev-ic{background:rgba(58,216,133,.25);color:var(--good)}
+  .rev-item.no .rev-ic{background:rgba(255,107,134,.25);color:var(--bad)}
+  .rev-txt{flex:1;min-width:0;color:var(--muted)}
+  .rev-txt b{display:block;color:var(--text);font-size:15px;margin-bottom:2px}
+
+  /* ---------- Конфетти ---------- */
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:99;overflow:hidden;display:none}
+  .confetti.show{display:block}
+  .confetti i{position:absolute;width:10px;height:10px;border-radius:2px;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.15}}
+
+  .shake{animation:shake .3s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+  /* ================= ПЛАНШЕТ / ДЕСКТОП ================= */
+  @media (min-width: 720px){
+    body{padding:24px;display:flex;align-items:center;justify-content:center}
+    .app{
+      width:min(760px,100%);
+      min-height:auto;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      overflow:hidden;
+    }
+    .topbar{position:static;border-radius:24px 24px 0 0}
+    .content{padding-bottom:24px}
+    .action-bar{
+      position:static;
+      border-radius:0 0 24px 24px;
+      flex-direction:row-reverse;
+      background:transparent;
+      backdrop-filter:none;
+      border-top:none;
+      padding-top:0;
+    }
+    .action-bar .btn{width:auto;flex:1}
+    .brand-title{font-size:17px}
   }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>🇷🇺 Безопасность России начинается с нас</h1>
-  <div class="subhead">разгадай кроссворд — проверь свою готовность</div>
-  
-  <div class="game-area">
-    <div class="grid-wrapper">
-      <div class="crossword-grid" id="crosswordGrid"></div>
-    </div>
-    
-    <div class="clues">
-      <div class="clue-section">
-        <h3>➡️ По горизонтали</h3>
-        <ul class="clue-list" id="acrossClues"></ul>
+<div class="confetti" id="confetti"></div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <div class="logo">🛡️</div>
+        <div class="brand-title">Противодействие вербовке</div>
       </div>
-      <div class="clue-section">
-        <h3>⬇️ По вертикали</h3>
-        <ul class="clue-list" id="downClues"></ul>
-      </div>
+      <div class="q-counter">Вопрос <b id="qCounter">1</b>/<b id="qTotal">10</b></div>
     </div>
+    <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
+  </header>
+
+  <main class="content">
+    <section class="screen active" id="screen-start">
+      <span class="badge">🧠 Учебно-профилактический тест</span>
+      <h1>Распознай вербовку — защити себя и других</h1>
+      <p class="lead">Отработай навыки безопасного поведения: распознавание признаков вербовочной работы, оценка рисков в переписке и офлайн, правильный алгоритм действий.</p>
+
+      <div class="features">
+        <div class="feature"><div class="ic">🎯</div><div><h4>Разные типы заданий</h4><p>Одиночный и множественный выбор, сценарии, сопоставление, сортировка шагов.</p></div></div>
+        <div class="feature"><div class="ic">💬</div><div><h4>Обратная связь</h4><p>После каждого вопроса — пояснение: почему так правильно.</p></div></div>
+        <div class="feature"><div class="ic">🏅</div><div><h4>Итоговый разбор</h4><p>Результат, уровень подготовки и разбор всех ответов.</p></div></div>
+      </div>
+
+      <div class="notice">
+        <span>🛡️</span>
+        <div><b>Важно:</b> тест создан в образовательных целях и не заменяет официальные инструкции. При реальной угрозе — обращайтесь в правоохранительные органы.</div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-quiz">
+      <div class="q-meta">
+        <span class="q-topic" id="qTopic">Тема</span>
+        <span class="q-type" id="qType">Тип</span>
+      </div>
+      <h2 class="q-text" id="qText"></h2>
+      <div id="qBody"></div>
+      <div class="feedback" id="feedback"></div>
+    </section>
+
+    <section class="screen" id="screen-result">
+      <div class="result-hero">
+        <div class="ring">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="82" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="18"/>
+            <circle id="ringFill" cx="100" cy="100" r="82" fill="none" stroke="url(#grad)" stroke-width="18"
+              stroke-linecap="round" stroke-dasharray="515.2" stroke-dashoffset="515.2" style="transition:stroke-dashoffset 1s ease"/>
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#5b93ff"/><stop offset="1" stop-color="#8b6cff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="ring-val"><div><span id="resPct">0%</span><small>ВЕРНО</small></div></div>
+        </div>
+        <h1 id="resTitle" style="margin:0">Результат</h1>
+        <p class="lead" id="resLead" style="margin:0">—</p>
+      </div>
+
+      <div class="levels">
+        <div class="level" data-lvl="0">0–49% — Базовый уровень: есть заметные пробелы в знаниях о признаках вербовки и алгоритмах действий.</div>
+        <div class="level" data-lvl="1">50–79% — Удовлетворительно: основные признаки знакомы, но есть путаница в алгоритмах и приоритетах.</div>
+        <div class="level" data-lvl="2">80–100% — Высокий уровень: уверенно распознаёшь признаки и действуешь по правильному алгоритму.</div>
+      </div>
+
+      <h2 style="font-size:20px;margin-top:6px">Разбор ответов</h2>
+      <div class="review" id="review"></div>
+    </section>
+  </main>
+
+  <div class="action-bar" id="actionBar">
+    <button class="btn" id="btnPrimary">Начать тест →</button>
   </div>
-  
-  <div class="buttons">
-    <button class="btn check" id="checkBtn">✅ Проверить</button>
-    <button class="btn reset" id="resetBtn">🔄 Сбросить</button>
-  </div>
-  <div class="message-box" id="messageBox">Заполни все клетки и нажми «Проверить»</div>
 </div>
 
 <script>
-const POOL = [
-  {text:'ПАТРИОТ',   clue:'Человек, преданный Отечеству'},
-  {text:'ОБОРОНА',   clue:'Защита страны от нападения'},
-  {text:'ТРЕВОГА',   clue:'Сигнал опасности'},
-  {text:'РОДИНА',    clue:'Страна, где родился'},
-  {text:'РУБЕЖ',     clue:'Оборонительная линия'},
-  {text:'АРМИЯ',     clue:'Вооружённые силы'},
-  {text:'МУЖЕСТВО',  clue:'Стойкость и храбрость'},
-  {text:'ЗАЩИТА',    clue:'Охрана государства'},
-  {text:'ЗАКОН',     clue:'Обязательный нормативный акт'},
-  {text:'ЩИТ',       clue:'Символ обороны'},
-  {text:'ГРАНИЦА',   clue:'Линия между государствами'},
-  {text:'ГЕРОЙ',     clue:'Совершивший подвиг'},
-  {text:'ОТВАГА',    clue:'Смелость и решительность'},
-  {text:'ОРДЕН',     clue:'Государственная награда'},
-  {text:'ЧЕСТЬ',     clue:'Достоинство и верность долгу'},
-  {text:'ДОЛГ',      clue:'Обязанность перед Родиной'},
-  {text:'СИГНАЛ',    clue:'Знак для передачи информации'},
-  {text:'ПОМОЩЬ',    clue:'Поддержка в трудной ситуации'},
-  {text:'ФЛАГ',      clue:'Государственный символ'},
-  {text:'ГЕРБ',      clue:'Официальная эмблема'},
-  {text:'ПОБЕДА',    clue:'Успех в битве'},
-  {text:'ОТЧИЗНА',   clue:'Родина, Отечество'},
-  {text:'ЕДИНСТВО',  clue:'Сплочённость народа'},
-  {text:'БЕЗОПАСНОСТЬ', clue:'Состояние защищённости'},
-  {text:'ЗАКОННОСТЬ',clue:'Соблюдение законов'},
-  {text:'ПОРЯДОК',   clue:'Организованность, дисциплина'},
-  {text:'ВОИН',      clue:'Защитник, солдат'},
-  {text:'СЛУЖБА',    clue:'Выполнение воинского долга'},
-  {text:'ПРИСЯГА',   clue:'Клятва верности'},
-  {text:'МИР',       clue:'Отсутствие войны'},
-  {text:'ДРУЖБА',    clue:'Взаимная поддержка'},
-  {text:'ВОЛЯ',      clue:'Свобода и решимость'},
-  {text:'СИЛА',      clue:'Мощь, способность защитить'},
-  {text:'СЛАВА',     clue:'Признание заслуг'},
-  {text:'ПАМЯТЬ',    clue:'Сохранение истории'},
-  {text:'ВЕТЕРАН',   clue:'Опытный защитник'},
-  {text:'РАЗВЕДКА',  clue:'Сбор сведений о противнике'},
-  {text:'ТЫЛ',       clue:'Часть страны за линией фронта'},
-  {text:'НАДЕЖДА',   clue:'Вера в лучшее'},
-  {text:'ВЕРНОСТЬ',  clue:'Преданность делу'}
+const QUESTIONS = [
+  {
+    id:1, type:"single", topic:"Признаки вербовки",
+    text:"Какой набор признаков чаще всего указывает на попытку вербовочного контакта в мессенджере?",
+    options:[
+      "Знакомый коллега уточняет рабочий график и просит прислать отчёт",
+      "Незнакомец с «патриотической» риторикой быстро переводит разговор в личное, просит фото, геолокацию и «просто помочь»",
+      "Курьер сервиса доставки уточняет адрес и время",
+      "Банк присылает уведомление о блокировке карты"
+    ],
+    correct:[1],
+    explain:"Вербовочный контакт часто начинается с идеологической риторики, затем — быстрый переход к личным данным, фото, геолокации и просьбам о небольших услугах. Классические бытовые контакты не имеют такой связки признаков."
+  },
+  {
+    id:2, type:"multi", topic:"Красные флаги",
+    text:"Отметьте все «красные флаги» в переписке, которые должны насторожить.",
+    options:[
+      "Просят установить «безобидное» приложение для связи",
+      "Просят прислать селфи на фоне здания или объекта",
+      "Обещают деньги за «простую просьбу»",
+      "Давят на эмоции: «ты же патриот», «все так делают»",
+      "Уточняют, с кем ты обсуждал(а) этот разговор",
+      "Спрашивают, как пройти в твой офис по пропуску"
+    ],
+    correct:[0,1,2,3,4,5],
+    explain:"Все перечисленные пункты — типичные красные флаги: вовлечение через приложение, сбор данных об объектах, финансовое стимулирование, эмоциональное давление, проверка круга общения и данных о доступе."
+  },
+  {
+    id:3, type:"scenario", topic:"Сценарий",
+    text:"Незнакомец в Telegram: «Привет! Нужна небольшая помощь: сфотографируй здание рядом, скину 3000 руб. Никому не говори». Что делать в первую очередь?",
+    options:[
+      "Сфотографировать, но не брать деньги",
+      "Уточнить, зачем это нужно, и если ответ убедительный — помочь",
+      "Не выполнять, не переводить общение в личное, зафиксировать переписку и сообщить в правоохранительные органы",
+      "Отправить смазанное фото, «чтобы проверить реакцию»"
+    ],
+    correct:[2],
+    explain:"Просьба сфотографировать объект + оплата + «никому не говори» — классическая схема вовлечения. Правильно: не выполнять, сохранить переписку, сообщить официально."
+  },
+  {
+    id:4, type:"match", topic:"Сопоставление",
+    text:"Сопоставьте тип признака с примером: выберите пример, затем нажмите на подходящую категорию.",
+    pairs:[
+      { key:"Эмоциональное давление", value:"«Ты же патриот, неужели тебе всё равно?»" },
+      { key:"Сбор данных об объекте", value:"Просьба сфотографировать вход, пропускной пункт, камеры" },
+      { key:"Финансовое вовлечение", value:"«Скину 5000 за небольшую услугу, никому не говори»" },
+      { key:"Изоляция и проверка", value:"«С кем ты это обсуждал? Удали переписку»" }
+    ],
+    explain:"Вербовка почти всегда сочетает эмоциональное давление, сбор данных, финансовое стимулирование и изоляцию от окружения."
+  },
+  {
+    id:5, type:"order", topic:"Алгоритм действий",
+    text:"Расставьте правильный порядок действий при подозрении на вербовочный контакт. Используйте кнопки ↑ и ↓.",
+    items:[
+      "Прекратить общение, не отвечать на провокации",
+      "Сохранить доказательства: скриншоты, ID, время, ссылки",
+      "Не выполнять просьбы и не переводить деньги",
+      "Сообщить в правоохранительные органы и руководству",
+      "Обсудить ситуацию с доверенным специалистом по безопасности"
+    ],
+    correctOrder:[0,1,2,3,4],
+    explain:"Логика: остановить контакт → зафиксировать доказательства → не вовлекаться действиями/деньгами → сообщить официально → получить консультацию специалиста."
+  },
+  {
+    id:6, type:"single", topic:"Психология",
+    text:"Почему вербовщики часто начинают с «безобидных» просьб?",
+    options:[
+      "Чтобы проверить техническую грамотность",
+      "Чтобы постепенно вовлечь и снизить критичность: маленькая просьба → привычка → более серьёзное задание",
+      "Чтобы сразу получить максимум данных",
+      "Чтобы соблюсти юридические формальности"
+    ],
+    correct:[1],
+    explain:"Это «эффект воронки»: маленькие просьбы снижают барьер, создают чувство обязательства и постепенно переводят человека к более серьёзным действиям."
+  },
+  {
+    id:7, type:"multi", topic:"Безопасность",
+    text:"Какие меры помогут снизить риск вербовочного контакта?",
+    options:[
+      "Ограничить публикацию геолокации и фото объектов",
+      "Проверять настройки приватности и не принимать незнакомцев в друзья без причины",
+      "Не устанавливать приложения по просьбе незнакомцев",
+      "Обсуждать чувствительные темы только в доверенном кругу",
+      "Игнорировать странные просьбы и сообщать о них",
+      "Публиковать рабочий график и маршруты для «прозрачности»"
+    ],
+    correct:[0,1,2,3,4],
+    explain:"Снижение цифрового следа, приватность, осторожность с приложениями, контроль круга общения и реакция на странные просьбы — базовые меры."
+  },
+  {
+    id:8, type:"match", topic:"Сопоставление",
+    text:"Сопоставьте ситуацию с правильной реакцией.",
+    pairs:[
+      { key:"Просят фото объекта за деньги", value:"Отказаться, сохранить переписку, сообщить" },
+      { key:"Просят установить «защищённый» мессенджер", value:"Не устанавливать, проверить источник" },
+      { key:"Давят на патриотизм и просят «мелочь»", value:"Не вовлекаться, зафиксировать факт" },
+      { key:"Спрашивают, с кем обсуждал разговор", value:"Не раскрывать, прекратить контакт" }
+    ],
+    explain:"Ключевой принцип: не выполнять просьбы, не устанавливать сомнительное ПО, не раскрывать круг общения и фиксировать факты."
+  },
+  {
+    id:9, type:"order", topic:"Алгоритм действий",
+    text:"Восстановите порядок действий, если поступила просьба сфотографировать охраняемый объект.",
+    items:[
+      "Не выполнять просьбу",
+      "Сохранить переписку и данные отправителя",
+      "Сообщить руководству или в правоохранительные органы",
+      "Не обсуждать детали в открытых чатах",
+      "Проконсультироваться со специалистом по безопасности при необходимости"
+    ],
+    correctOrder:[0,1,2,3,4],
+    explain:"Сначала — не выполнять. Затем фиксация доказательств. Далее — официальное информирование. Публичное обсуждение может навредить."
+  },
+  {
+    id:10, type:"multi", topic:"Проверка мифов",
+    text:"Отметьте НЕВЕРНЫЕ утверждения.",
+    options:[
+      "Если предложение пришло от «знакомого», проверять не нужно",
+      "Вербовка всегда происходит только офлайн",
+      "Достаточно один раз отказаться — и больше не побеспокоят",
+      "Небольшая просьба «на благо» безопасна, если за неё платят",
+      "Любую подозрительную просьбу нужно фиксировать и сообщать",
+      "Лучше удалить переписку, чтобы «не было проблем»"
+    ],
+    correct:[0,1,2,3,5],
+    explain:"Неверные: проверять нужно даже «знакомых»; вербовка идёт и онлайн; отказ не гарантирует прекращения; маленькая оплачиваемая просьба — тактика вовлечения; удаление переписки лишает доказательств."
+  }
 ];
 
-const SIZE = 22;
-const TARGET = 15;
+const state = {
+  idx:0, answers:[], timerId:null, startedAt:null,
+  answered:false, userSel:null, matchAssign:{}, pickedChip:null, orderItems:[]
+};
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
 
-function shuffle(arr){
-  const a = arr.slice();
-  for (let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
-  return a;
+const el = {
+  screens:{ start:$("#screen-start"), quiz:$("#screen-quiz"), result:$("#screen-result") },
+  progress:$("#progressBar"), qCounter:$("#qCounter"), qTotal:$("#qTotal"),
+  qTopic:$("#qTopic"), qType:$("#qType"), qText:$("#qText"), qBody:$("#qBody"),
+  feedback:$("#feedback"), actionBar:$("#actionBar"), btnPrimary:$("#btnPrimary"),
+  resPct:$("#resPct"), resTitle:$("#resTitle"), resLead:$("#resLead"),
+  ringFill:$("#ringFill"), review:$("#review"), confetti:$("#confetti")
+};
+
+const TYPE_LABEL = {
+  single:"Один вариант", multi:"Несколько вариантов",
+  scenario:"Сценарий", match:"Сопоставление", order:"Сортировка"
+};
+
+function showScreen(name){
+  Object.values(el.screens).forEach(s=>s.classList.remove("active"));
+  el.screens[name].classList.add("active");
+  window.scrollTo({top:0, behavior:"instant"});
+}
+function shuffle(a){
+  const arr = a.slice();
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+function sameArray(a,b){
+  if(a.length!==b.length) return false;
+  const A=a.slice().sort(), B=b.slice().sort();
+  return A.every((v,i)=>v===B[i]);
+}
+function arraysEqualExact(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
+
+function updateProgress(){
+  const done = state.idx + (state.answered ? 1 : 0);
+  const pct = Math.round((done/QUESTIONS.length)*100);
+  el.progress.style.width = pct + "%";
+  el.qCounter.textContent = Math.min(state.idx+1, QUESTIONS.length);
 }
 
-function tryLayout(selected){
-  const grid = Array.from({length:SIZE},()=>Array(SIZE).fill(null));
-  const starts = new Set();
-  const placed = [];
+el.qTotal.textContent = QUESTIONS.length;
+el.btnPrimary.addEventListener("click", onPrimary);
 
-  function canPlace(word,row,col,dir){
-    const len = word.length;
-    if (dir==='across' && col+len > SIZE) return false;
-    if (dir==='down'   && row+len > SIZE) return false;
-    if (row<0||col<0) return false;
+function onPrimary(){
+  if(el.screens.start.classList.contains("active")){ startQuiz(); return; }
+  if(el.screens.quiz.classList.contains("active")){
+    if(!state.answered) submitCurrent();
+    else nextQuestion();
+    return;
+  }
+  if(el.screens.result.classList.contains("active")){ startQuiz(); return; }
+}
 
-    let inter = 0;
-    for (let i=0;i<len;i++){
-      const r = dir==='across'?row:row+i;
-      const c = dir==='across'?col+i:col;
-      const cur = grid[r][c];
-      if (cur!==null){
-        if (cur!==word[i]) return false;
-        inter++;
-        if (inter>1) return false;
+function startQuiz(){
+  state.idx=0; state.answers=[]; state.answered=false; state.userSel=null;
+  state.matchAssign={}; state.pickedChip=null; state.orderItems=[];
+  state.startedAt=Date.now();
+  clearInterval(state.timerId);
+  el.confetti.classList.remove("show"); el.confetti.innerHTML="";
+  showScreen("quiz");
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[state.idx];
+  state.answered=false; state.userSel=null; state.matchAssign={}; state.pickedChip=null; state.orderItems=[];
+
+  el.qTopic.textContent = q.topic;
+  el.qType.textContent = TYPE_LABEL[q.type];
+  el.qText.textContent = q.text;
+  el.feedback.className="feedback"; el.feedback.innerHTML="";
+  el.qBody.innerHTML="";
+  el.btnPrimary.disabled=false;
+  el.btnPrimary.textContent="Ответить";
+
+  if(q.type==="single"||q.type==="scenario") renderSingle(q);
+  else if(q.type==="multi") renderMulti(q);
+  else if(q.type==="match") renderMatch(q);
+  else if(q.type==="order") renderOrder(q);
+
+  updateProgress();
+  window.scrollTo({top:0, behavior:"instant"});
+}
+
+function renderSingle(q){
+  const wrap=document.createElement("div"); wrap.className="options";
+  q.options.forEach((txt,i)=>{
+    const d=document.createElement("div");
+    d.className="opt"; d.dataset.i=i;
+    d.setAttribute("role","button"); d.setAttribute("tabindex","0");
+    d.innerHTML=`<div class="mark">${i+1}</div><div class="txt">${txt}</div>`;
+    const choose=()=>{
+      if(state.answered) return;
+      $$(".opt",wrap).forEach(x=>x.classList.remove("sel"));
+      d.classList.add("sel");
+      state.userSel=i;
+      el.btnPrimary.disabled=false;
+    };
+    d.addEventListener("click",choose);
+    d.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();choose();}});
+    wrap.appendChild(d);
+  });
+  el.qBody.appendChild(wrap);
+}
+
+function submitSingle(q){
+  if(state.answered||state.userSel===null) return;
+  state.answered=true;
+  const ok = q.correct.includes(state.userSel);
+  $$(".opt", el.qBody).forEach(x=>{
+    x.dataset.disabled="1";
+    const i=Number(x.dataset.i);
+    x.classList.remove("sel");
+    if(q.correct.includes(i)) x.classList.add("correct");
+    if(i===state.userSel && !ok) x.classList.add("wrong");
+    if(i===state.userSel && ok) x.classList.add("correct");
+  });
+  if(!ok){ el.screens.quiz.classList.add("shake"); setTimeout(()=>el.screens.quiz.classList.remove("shake"),350); }
+  state.answers.push({ qid:q.id, correct:ok, topic:q.topic });
+  showFeedback(ok, q.explain);
+  afterAnswer();
+}
+
+function renderMulti(q){
+  const wrap=document.createElement("div"); wrap.className="options";
+  const sel=new Set();
+  q.options.forEach((txt,i)=>{
+    const d=document.createElement("div");
+    d.className="opt"; d.dataset.i=i;
+    d.setAttribute("role","checkbox"); d.setAttribute("tabindex","0");
+    d.innerHTML=`<div class="mark"></div><div class="txt">${txt}</div>`;
+    const toggle=()=>{
+      if(state.answered) return;
+      if(sel.has(i)){ sel.delete(i); d.classList.remove("sel"); d.querySelector(".mark").textContent=""; }
+      else { sel.add(i); d.classList.add("sel"); d.querySelector(".mark").textContent="✓"; }
+      state.userSel=[...sel];
+      el.btnPrimary.disabled = sel.size===0;
+    };
+    d.addEventListener("click",toggle);
+    d.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+    wrap.appendChild(d);
+  });
+  el.qBody.appendChild(wrap);
+  el.btnPrimary.disabled=true;
+}
+
+function submitMulti(q){
+  if(state.answered||!state.userSel||state.userSel.length===0) return;
+  state.answered=true;
+  const ok=sameArray(state.userSel,q.correct);
+  $$(".opt", el.qBody).forEach(x=>{
+    x.dataset.disabled="1";
+    const i=Number(x.dataset.i);
+    const isSel=state.userSel.includes(i);
+    const isCorr=q.correct.includes(i);
+    if(isCorr) x.classList.add("correct");
+    if(isSel&&!isCorr) x.classList.add("wrong");
+    if(isSel) x.classList.remove("sel");
+    const m=x.querySelector(".mark");
+    if(isCorr) m.textContent="✓";
+    else if(isSel) m.textContent="✕";
+    else m.textContent="";
+  });
+  if(!ok){ el.screens.quiz.classList.add("shake"); setTimeout(()=>el.screens.quiz.classList.remove("shake"),350); }
+  state.answers.push({ qid:q.id, correct:ok, topic:q.topic });
+  showFeedback(ok,q.explain);
+  afterAnswer();
+}
+
+function renderMatch(q){
+  const wrap=document.createElement("div");
+  wrap.className="match-section";
+
+  const chipsTitle=document.createElement("div");
+  chipsTitle.className="match-section-title";
+  chipsTitle.textContent="1. Выберите пример";
+  wrap.appendChild(chipsTitle);
+
+  const chipList=document.createElement("div");
+  chipList.className="chip-list";
+  wrap.appendChild(chipList);
+
+  const slotsTitle=document.createElement("div");
+  slotsTitle.className="match-section-title";
+  slotsTitle.textContent="2. Нажмите подходящую категорию";
+  wrap.appendChild(slotsTitle);
+
+  const slotList=document.createElement("div");
+  slotList.className="slot-list";
+  wrap.appendChild(slotList);
+
+  el.qBody.appendChild(wrap);
+
+  const chips={}; const slots={};
+
+  shuffle(q.pairs).forEach(p=>{
+    const c=document.createElement("div");
+    c.className="chip";
+    c.dataset.value=p.value;
+    c.textContent=p.value;
+    c.setAttribute("role","button");
+    c.setAttribute("tabindex","0");
+    const pick=()=>{
+      if(state.answered) return;
+      state.pickedChip = (state.pickedChip===p.value) ? null : p.value;
+      updateChipVisual();
+    };
+    c.addEventListener("click",pick);
+    c.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();pick();}});
+    chips[p.value]=c;
+    chipList.appendChild(c);
+  });
+
+  q.pairs.forEach(p=>{
+    const s=document.createElement("div");
+    s.className="slot";
+    s.dataset.key=p.key;
+    s.setAttribute("role","button");
+    s.setAttribute("tabindex","0");
+    const onClick=()=>{
+      if(state.answered) return;
+      if(state.pickedChip){
+        Object.keys(state.matchAssign).forEach(k=>{
+          if(state.matchAssign[k]===state.pickedChip) delete state.matchAssign[k];
+        });
+        state.matchAssign[p.key]=state.pickedChip;
+        state.pickedChip=null;
+        renderMatchVisual();
+      } else if(state.matchAssign[p.key]){
+        delete state.matchAssign[p.key];
+        renderMatchVisual();
+      }
+    };
+    s.addEventListener("click",onClick);
+    s.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();onClick();}});
+    slots[p.key]=s;
+    slotList.appendChild(s);
+  });
+
+  function updateChipVisual(){
+    Object.entries(chips).forEach(([val,c])=>{
+      const used=Object.values(state.matchAssign).includes(val);
+      c.classList.toggle("used",used);
+      c.classList.toggle("picked", state.pickedChip===val);
+    });
+    el.btnPrimary.disabled = Object.keys(state.matchAssign).length < q.pairs.length;
+  }
+
+  function renderMatchVisual(){
+    Object.entries(slots).forEach(([key,s])=>{
+      const val=state.matchAssign[key];
+      s.classList.toggle("filled",!!val);
+      s.classList.remove("ok","bad");
+      s.innerHTML=`<div class="slot-label">${key}</div>`;
+      if(val){
+        const v=document.createElement("div");
+        v.className="slot-value";
+        v.innerHTML=`<span>${val}</span>`;
+        const b=document.createElement("button");
+        b.type="button"; b.textContent="✕"; b.setAttribute("aria-label","Убрать");
+        b.addEventListener("click",e=>{
+          e.stopPropagation();
+          if(state.answered) return;
+          delete state.matchAssign[key];
+          renderMatchVisual();
+        });
+        v.appendChild(b);
+        s.appendChild(v);
       } else {
-        if (dir==='across'){
-          if (r>0 && grid[r-1][c]!==null) return false;
-          if (r<SIZE-1 && grid[r+1][c]!==null) return false;
-        } else {
-          if (c>0 && grid[r][c-1]!==null) return false;
-          if (c<SIZE-1 && grid[r][c+1]!==null) return false;
-        }
-      }
-    }
-    if (dir==='across'){
-      if (col>0 && grid[row][col-1]!==null) return false;
-      if (col+len<SIZE && grid[row][col+len]!==null) return false;
-    } else {
-      if (row>0 && grid[row-1][col]!==null) return false;
-      if (row+len<SIZE && grid[row+len][col]!==null) return false;
-    }
-    if (starts.has(row+','+col)) return false;
-    if (placed.length>0 && inter===0) return false;
-    return true;
-  }
-
-  function place(word,row,col,dir){
-    for (let i=0;i<word.length;i++){
-      const r = dir==='across'?row:row+i;
-      const c = dir==='across'?col+i:col;
-      grid[r][c] = word[i];
-    }
-    starts.add(row+','+col);
-    placed.push({word,row,col,dir});
-  }
-
-  const first = selected[0].text;
-  place(first, Math.floor(SIZE/2), Math.floor(SIZE/2)-Math.floor(first.length/2), 'across');
-
-  const remaining = selected.slice(1);
-  for (const w of remaining){
-    const word = w.text;
-    let best = null;
-    for (let r=0;r<SIZE;r++){
-      for (let c=0;c<SIZE;c++){
-        for (const dir of ['across','down']){
-          if (canPlace(word,r,c,dir)){
-            let score = 0;
-            for (let i=0;i<word.length;i++){
-              const rr = dir==='across'?r:r+i;
-              const cc = dir==='across'?c+i:c;
-              if (grid[rr][cc]!==null) score += 10;
-            }
-            score -= Math.abs(r-Math.floor(SIZE/2)) + Math.abs(c-Math.floor(SIZE/2));
-            if (!best || score > best.score) best = {r,c,dir,score};
-          }
-        }
-      }
-    }
-    if (best) place(word,best.r,best.c,best.dir);
-    else return {grid:null,placed,missing:word};
-  }
-  return {grid,placed,missing:null};
-}
-
-let result = null;
-let attempts = 0;
-while (attempts < 500 && !result){
-  attempts++;
-  const shuffled = shuffle(POOL);
-  for (let take=0; take<=POOL.length-TARGET; take++){
-    const subset = shuffled.slice(take, take+TARGET);
-    const sorted = subset.slice().sort((a,b)=>b.text.length - a.text.length);
-    const r = tryLayout(sorted);
-    if (r.grid){ result = r; break; }
-  }
-}
-
-if (!result) {
-  document.getElementById('messageBox').textContent = "Ошибка генерации, обновите страницу.";
-} else {
-  let minR=SIZE, maxR=0, minC=SIZE, maxC=0;
-  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++){
-    if (result.grid[r][c]!==null){
-      minR=Math.min(minR,r); maxR=Math.max(maxR,r);
-      minC=Math.min(minC,c); maxC=Math.max(maxC,c);
-    }
-  }
-  const ROWS = maxR-minR+1, COLS = maxC-minC+1;
-  const solution = [];
-  for (let r=minR;r<=maxR;r++){
-    const row = [];
-    for (let c=minC;c<=maxC;c++) row.push(result.grid[r][c]);
-    solution.push(row);
-  }
-
-  const placed = result.placed;
-  const rawWords = placed.map(p => ({
-    dir: p.dir,
-    row: p.row - minR,
-    col: p.col - minC,
-    text: p.word,
-    clue: POOL.find(x => x.text === p.word).clue
-  }));
-
-  const starts = new Set();
-  for (let r=0;r<ROWS;r++){
-    for (let c=0;c<COLS;c++){
-      if (solution[r][c]===null) continue;
-      const isStartAcross = (c===0 || solution[r][c-1]===null) && (c+1<COLS && solution[r][c+1]!==null);
-      const isStartDown   = (r===0 || solution[r-1][c]===null) && (r+1<ROWS && solution[r+1][c]!==null);
-      if (isStartAcross || isStartDown) starts.add(r+','+c);
-    }
-  }
-  
-  const sortedStarts = Array.from(starts).map(s => {
-    const [r,c] = s.split(',').map(Number);
-    return {r,c};
-  }).sort((a,b)=>a.r-b.r || a.c-b.c);
-  
-  const idMap = new Map();
-  sortedStarts.forEach((pos,i) => idMap.set(pos.r+','+pos.c, i+1));
-  
-  const words = rawWords.map(w => ({...w, id: idMap.get(w.row+','+w.col)}))
-                        .filter(w=>w.id)
-                        .sort((a,b)=>a.id-b.id);
-
-  const gridEl = document.getElementById('crosswordGrid');
-  const acrossEl = document.getElementById('acrossClues');
-  const downEl = document.getElementById('downClues');
-  const msg = document.getElementById('messageBox');
-
-  gridEl.style.gridTemplateColumns = `repeat(${COLS}, 30px)`;
-
-  let currentDirection = 'across'; // Текущее направление ввода
-  let activeRow = -1, activeCol = -1; // Текущая клетка
-
-  function getNextCell(r, c, dir) {
-    if (dir === 'across') return { r, c: c + 1 };
-    else return { r: r + 1, c };
-  }
-
-  function renderGrid() {
-    gridEl.innerHTML = '';
-    for (let r=0;r<ROWS;r++){
-      for (let c=0;c<COLS;c++){
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        if (solution[r][c]===null){
-          cell.classList.add('black');
-        } else {
-          const inp = document.createElement('input');
-          inp.type = 'text';
-          inp.maxLength = 1;
-          inp.dataset.r = r;
-          inp.dataset.c = c;
-          
-          // При клике на клетку определяем, в каком слове мы находимся
-          inp.addEventListener('focus', (e) => {
-            const r = +e.target.dataset.r;
-            const c = +e.target.dataset.c;
-
-            // Если мы уже в этой клетке, переключаем направление (если возможно)
-            if (activeRow === r && activeCol === c) {
-              const isAcross = (c === 0 || solution[r][c-1] === null) && (c + 1 < COLS && solution[r][c+1] !== null);
-              const isDown   = (r === 0 || solution[r-1][c] === null) && (r + 1 < ROWS && solution[r+1][c] !== null);
-              if (isAcross && isDown) {
-                currentDirection = (currentDirection === 'across') ? 'down' : 'across';
-              }
-            } else {
-              // Мы перешли на новую клетку. Определяем направление, если есть выбор
-              const isAcross = (c === 0 || solution[r][c-1] === null) && (c + 1 < COLS && solution[r][c+1] !== null);
-              const isDown   = (r === 0 || solution[r-1][c] === null) && (r + 1 < ROWS && solution[r+1][c] !== null);
-              
-              // Если мы зашли по горизонтали/вертикали и в этом направлении есть слово — используем его
-              if (isAcross && !isDown) currentDirection = 'across';
-              else if (!isAcross && isDown) currentDirection = 'down';
-              // Иначе оставляем текущее направление, если оно подходит, или выбираем 'across'
-              else if (isAcross && isDown) {
-                 // Оставляем текущее, если оно допустимо, иначе across
-                 if (currentDirection === 'down') {
-                   // проверим, есть ли буквы вниз
-                   if (!(r+1 < ROWS && solution[r+1][c] !== null)) currentDirection = 'across';
-                 } else {
-                   if (!(c+1 < COLS && solution[r][c+1] !== null)) currentDirection = 'down';
-                 }
-              }
-            }
-            activeRow = r; activeCol = c;
-          });
-
-          inp.addEventListener('input', e => {
-            const val = e.target.value.toUpperCase();
-            e.target.value = val;
-
-            if (val) {
-              const r = +e.target.dataset.r;
-              const c = +e.target.dataset.c;
-              
-              let nr = r, nc = c;
-              let found = false;
-              
-              // Ищем следующую клетку
-              while(true) {
-                const next = getNextCell(nr, nc, currentDirection);
-                nr = next.r;
-                nc = next.c;
-                
-                if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS || solution[nr][nc] === null) break;
-                found = true;
-                break;
-              }
-
-              if (found) {
-                const nextInp = gridEl.children[nr * COLS + nc].querySelector('input');
-                if (nextInp) nextInp.focus();
-              }
-            }
-          });
-
-          inp.addEventListener('keydown', onKey);
-          cell.appendChild(inp);
-        }
-        gridEl.appendChild(cell);
-      }
-    }
-    words.forEach(w => {
-      const cell = gridEl.children[w.row * COLS + w.col];
-      if (cell){
-        const badge = document.createElement('span');
-        badge.className = 'number-badge';
-        badge.textContent = w.id;
-        cell.appendChild(badge);
+        const hint=document.createElement("div");
+        hint.className="slot-hint";
+        hint.textContent = state.pickedChip ? "Нажмите, чтобы вставить выбранный пример" : "Выберите пример сверху";
+        s.appendChild(hint);
       }
     });
+    updateChipVisual();
   }
 
-  function onKey(e){
-    const inp = e.target;
-    const r = +inp.dataset.r, c = +inp.dataset.c;
-    const moves = {ArrowRight:[0,1], ArrowLeft:[0,-1], ArrowDown:[1,0], ArrowUp:[-1,0]};
-    
-    if (moves[e.key]){
-      e.preventDefault();
-      const [dr, dc] = moves[e.key];
-      const nr = r+dr, nc = c+dc;
-      if (nr>=0 && nr<ROWS && nc>=0 && nc<COLS && solution[nr][nc]!==null){
-        // При ручном перемещении стрелками меняем направление на соответствующее
-        currentDirection = (dr !== 0) ? 'down' : 'across';
-        gridEl.children[nr * COLS + nc].querySelector('input').focus();
-      }
-    } else if (e.key === 'Backspace' && !inp.value) {
-      let pr = r, pc = c;
-      if (currentDirection === 'across') pc--;
-      else pr--;
-      
-      if (pr >= 0 && pr < ROWS && pc >= 0 && pc < COLS && solution[pr][pc] !== null) {
-        const prevInp = gridEl.children[pr * COLS + pc].querySelector('input');
-        if (prevInp) {
-          prevInp.focus();
-          prevInp.value = ''; 
-        }
-      }
-    }
-  }
+  state._match = { chips, slots, q };
+  renderMatchVisual();
+}
 
-  function renderClues(){
-    acrossEl.innerHTML = '';
-    downEl.innerHTML = '';
-    words.forEach(w => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span class="clue-num">${w.id}</span><span>${w.clue} (${w.text.length})</span>`;
-      (w.dir === 'across' ? acrossEl : downEl).appendChild(li);
+function submitMatch(q){
+  if(state.answered) return;
+  if(Object.keys(state.matchAssign).length < q.pairs.length) return;
+  state.answered=true;
+  let allOk=true;
+  const { slots } = state._match;
+  q.pairs.forEach(p=>{
+    const s=slots[p.key];
+    const val=state.matchAssign[p.key];
+    const ok = val===p.value;
+    s.classList.remove("filled");
+    s.classList.add(ok?"ok":"bad");
+    if(!ok) allOk=false;
+  });
+  const { chips } = state._match;
+  Object.entries(chips).forEach(([val,c])=>{
+    c.classList.remove("picked");
+    const pair=q.pairs.find(p=>p.value===val);
+    const assignedKey=Object.keys(state.matchAssign).find(k=>state.matchAssign[k]===val);
+    if(assignedKey===pair.key) c.style.borderColor="var(--good)";
+    else c.style.borderColor="var(--bad)";
+  });
+  if(!allOk){ el.screens.quiz.classList.add("shake"); setTimeout(()=>el.screens.quiz.classList.remove("shake"),350); }
+  state.answers.push({ qid:q.id, correct:allOk, topic:q.topic });
+  showFeedback(allOk,q.explain);
+  afterAnswer();
+}
+
+function renderOrder(q){
+  let arr=shuffle(q.items.map((t,i)=>({t,orig:i})));
+  if(arraysEqualExact(arr.map(x=>x.orig),q.correctOrder)&&q.items.length>1) arr=arr.slice().reverse();
+  state.orderItems=arr.map(x=>x.orig);
+
+  const wrap=document.createElement("div");
+  wrap.className="sortable";
+  el.qBody.appendChild(wrap);
+
+  function draw(){
+    wrap.innerHTML="";
+    state.orderItems.forEach((orig,idx)=>{
+      const item=q.items[orig];
+      const d=document.createElement("div");
+      d.className="sort-item";
+      d.innerHTML=`
+        <span class="sort-idx">${idx+1}</span>
+        <span class="sort-text">${item}</span>
+        <span class="sort-moves">
+          <button type="button" data-up aria-label="Вверх" ${idx===0?"disabled":""}>↑</button>
+          <button type="button" data-down aria-label="Вниз" ${idx===state.orderItems.length-1?"disabled":""}>↓</button>
+        </span>`;
+      d.querySelector("[data-up]").addEventListener("click",e=>{
+        e.stopPropagation();
+        if(state.answered||idx===0) return;
+        [state.orderItems[idx-1],state.orderItems[idx]]=[state.orderItems[idx],state.orderItems[idx-1]];
+        draw();
+      });
+      d.querySelector("[data-down]").addEventListener("click",e=>{
+        e.stopPropagation();
+        if(state.answered||idx===state.orderItems.length-1) return;
+        [state.orderItems[idx+1],state.orderItems[idx]]=[state.orderItems[idx],state.orderItems[idx+1]];
+        draw();
+      });
+      wrap.appendChild(d);
     });
   }
+  draw();
+  el.btnPrimary.disabled=false;
+}
 
-  function check(){
-    let filled = true, correct = true;
-    for (let r=0;r<ROWS;r++){
-      for (let c=0;c<COLS;c++){
-        if (solution[r][c]===null) continue;
-        const inp = gridEl.children[r * COLS + c].querySelector('input');
-        const val = inp.value.trim().toUpperCase();
-        if (!val){ filled=false; correct=false; }
-        else if (val !== solution[r][c]) correct = false;
-      }
-    }
-    if (!filled){ msg.textContent = '❌ Заполните все клетки!'; msg.className = 'message-box error'; }
-    else if (correct){ msg.textContent = '✅ Молодец! Всё верно! Безопасность России начинается с нас!'; msg.className = 'message-box success'; }
-    else { msg.textContent = '❌ Есть ошибки. Попробуй ещё раз.'; msg.className = 'message-box error'; }
+function submitOrder(q){
+  if(state.answered) return;
+  state.answered=true;
+  const ok=arraysEqualExact(state.orderItems,q.correctOrder);
+  $$(".sort-item", el.qBody).forEach((d,idx)=>{
+    const good = state.orderItems[idx]===q.correctOrder[idx];
+    d.style.borderColor = good?"var(--good)":"var(--bad)";
+    d.style.background = good?"rgba(58,216,133,.12)":"rgba(255,107,134,.1)";
+  });
+  if(!ok){ el.screens.quiz.classList.add("shake"); setTimeout(()=>el.screens.quiz.classList.remove("shake"),350); }
+  state.answers.push({ qid:q.id, correct:ok, topic:q.topic });
+  showFeedback(ok,q.explain);
+  afterAnswer();
+}
+
+function submitCurrent(){
+  const q=QUESTIONS[state.idx];
+  if(q.type==="single"||q.type==="scenario") submitSingle(q);
+  else if(q.type==="multi") submitMulti(q);
+  else if(q.type==="match") submitMatch(q);
+  else if(q.type==="order") submitOrder(q);
+}
+
+function showFeedback(ok,explain){
+  el.feedback.className="feedback show "+(ok?"ok":"no");
+  el.feedback.innerHTML=`<h5>${ok?"✅ Верно!":"❌ Не совсем."}</h5><p>${explain}</p>`;
+}
+
+function afterAnswer(){
+  el.btnPrimary.disabled=false;
+  el.btnPrimary.textContent = state.idx===QUESTIONS.length-1 ? "Показать результат →" : "Дальше →";
+  updateProgress();
+  setTimeout(()=>{ el.feedback.scrollIntoView({behavior:"smooth", block:"center"}); },80);
+}
+
+function nextQuestion(){
+  if(state.idx<QUESTIONS.length-1){ state.idx++; renderQuestion(); }
+  else { finish(); }
+}
+
+function finish(){
+  clearInterval(state.timerId);
+  const total=QUESTIONS.length;
+  const correct=state.answers.filter(a=>a.correct).length;
+  const pct=Math.round(correct/total*100);
+
+  el.resPct.textContent=pct+"%";
+  el.resTitle.textContent = pct>=80?"🏆 Высокий уровень!":pct>=50?"👍 Хороший старт":"📚 Есть над чем поработать";
+  const levelIdx = pct>=80?2:pct>=50?1:0;
+  $$(".level").forEach(l=>l.classList.toggle("active",Number(l.dataset.lvl)===levelIdx));
+  el.resLead.textContent = `Правильных ответов: ${correct} из ${total}. ${
+    pct>=80?"Ты уверенно распознаёшь признаки вербовки.":
+    pct>=50?"Основные признаки знакомы, но стоит повторить алгоритмы.":
+    "Рекомендуем изучить признаки вербовки и порядок действий."
+  }`;
+
+  const C=2*Math.PI*82;
+  el.ringFill.style.strokeDashoffset=String(C-(pct/100)*C);
+
+  el.review.innerHTML="";
+  QUESTIONS.forEach((q,i)=>{
+    const a=state.answers[i]||{correct:false};
+    const d=document.createElement("div");
+    d.className="rev-item "+(a.correct?"ok":"no");
+    d.innerHTML=`<div class="rev-ic">${a.correct?"✓":"✕"}</div>
+      <div class="rev-txt"><b>${i+1}. ${q.topic}</b>${q.text}</div>`;
+    el.review.appendChild(d);
+  });
+
+  el.btnPrimary.textContent="Пройти заново →";
+  el.btnPrimary.onclick = ()=>{ el.btnPrimary.onclick = onPrimary; startQuiz(); };
+
+  showScreen("result");
+  if(pct>=80) launchConfetti();
+}
+
+function launchConfetti(){
+  el.confetti.classList.add("show"); el.confetti.innerHTML="";
+  const colors=["#5b93ff","#8b6cff","#3ad885","#ffc24d","#ff6b86"];
+  for(let i=0;i<50;i++){
+    const p=document.createElement("i");
+    p.style.left=Math.random()*100+"vw";
+    p.style.top="-20px";
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration=(2.2+Math.random()*1.8)+"s";
+    p.style.animationDelay=(Math.random()*0.5)+"s";
+    el.confetti.appendChild(p);
   }
-
-  function reset(){
-    gridEl.querySelectorAll('input').forEach(i => i.value = '');
-    msg.textContent = 'Кроссворд сброшен. Заполни клетки заново.';
-    msg.className = 'message-box';
-  }
-
-  document.getElementById('checkBtn').addEventListener('click', check);
-  document.getElementById('resetBtn').addEventListener('click', reset);
-
-  renderGrid();
-  renderClues();
+  setTimeout(()=>{ el.confetti.classList.remove("show"); el.confetti.innerHTML=""; },4500);
 }
 </script>
 </body>
